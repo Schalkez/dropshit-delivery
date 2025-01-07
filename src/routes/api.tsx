@@ -1,10 +1,10 @@
-import { API_URL } from '../utils';
+import { API_URL } from "../utils";
 
 export const apiRoutes = {
   login: `${API_URL}/auth/signin`,
   logout: `${API_URL}/logout`,
   users: `${API_URL}/users`,
-  orders: `${API_URL}/profile/getOrderByStore`,
+  orders: `${API_URL}/shop/getOrderByStore`,
   reviews: `${API_URL}/unknown`,
   deleteUser: `${API_URL}/user`,
   getDeposit: `${API_URL}/profile/history-payments`,
@@ -31,5 +31,4 @@ export const apiRoutes = {
   getBanks: `${API_URL}/banks`,
   updateBetFuture: `${API_URL}/updateHistoryFuture`,
   handleUpdateWithdraw: `${API_URL}/handleUpdateWithdraw`,
-
 };
