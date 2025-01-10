@@ -1,34 +1,35 @@
-import { createBrowserRouter } from 'react-router-dom';
-import AuthLayout from '../components/auth/AuthLayout';
-import ErrorPage from '../components/errorPage';
-import Layout from '../components/layout';
-import Redirect from '../components/layout/Redirect';
-import NotFoundPage from '../components/notfoundPage';
-import { webRoutes } from './web';
-import loadable from '@loadable/component';
-import ProgressBar from '../components/loader/progressBar';
-import RequireAuth from './requireAuth';
-import Login from '../components/auth/Login';
-import About from '../components/demo-pages/about';
-import Deposit from '../components/deposit';
-import Withdraw from '../components/withdraw';
-import HistoriesBet from '../components/history-bet';
-import Bet from '../components/bet';
-import UserKyc from '../components/kyc';
-import Setting from '../components/setting';
-import UserRef from '../components/verify-ref';
-import HistoriesBetFutrue from '../components/history-futrue';
-import HistoriesInvest from '../components/history-invest';
-import Orders from '../components/orders';
-import DetailPay from '../components/detail-pay';
+import { createBrowserRouter } from "react-router-dom";
+import AuthLayout from "../components/auth/AuthLayout";
+import ErrorPage from "../components/errorPage";
+import Layout from "../components/layout";
+import Redirect from "../components/layout/Redirect";
+import NotFoundPage from "../components/notfoundPage";
+import { webRoutes } from "./web";
+import loadable from "@loadable/component";
+import ProgressBar from "../components/loader/progressBar";
+import RequireAuth from "./requireAuth";
+import Login from "../components/auth/Login";
+import About from "../components/demo-pages/about";
+import Deposit from "../components/deposit";
+import Withdraw from "../components/withdraw";
+import HistoriesBet from "../components/history-bet";
+import Bet from "../components/bet";
+import UserKyc from "../components/kyc";
+import Setting from "../components/setting";
+import UserRef from "../components/verify-ref";
+import HistoriesBetFutrue from "../components/history-futrue";
+import HistoriesInvest from "../components/history-invest";
+import Orders from "../components/orders";
+import DetailPay from "../components/detail-pay";
 
 const errorElement = <ErrorPage />;
 const fallbackElement = <ProgressBar />;
 
-const Dashboard = loadable(() => import('../components/dashboard'), {
+const Dashboard = loadable(() => import("../components/dashboard"), {
   fallback: fallbackElement,
 });
-const Users = loadable(() => import('../components/users'), {
+
+const Users = loadable(() => import("../components/users"), {
   fallback: fallbackElement,
 });
 
@@ -121,7 +122,7 @@ export const browserRouter = createBrowserRouter([
 
   // 404
   {
-    path: '*',
+    path: "*",
     element: <NotFoundPage />,
     errorElement: errorElement,
   },
