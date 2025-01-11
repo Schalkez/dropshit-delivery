@@ -3,9 +3,7 @@ import {
   ProTable,
   ProColumns,
   RequestData,
-  TableDropdown,
-  ProDescriptions,
-} from '@ant-design/pro-components';
+} from "@ant-design/pro-components";
 import {
   BreadcrumbProps,
   Button,
@@ -14,37 +12,56 @@ import {
   InputNumber,
   Modal,
   Select,
-  Space,
   Switch,
   Tabs,
   Tag,
   message,
   notification,
-} from 'antd';
-import { useRef, useState } from 'react';
-import { FiUsers, FiEdit, FiClipboard, FiLock } from 'react-icons/fi';
-import { CiCircleMore } from 'react-icons/ci';
-import { Link } from 'react-router-dom';
-import { User } from '../../interfaces/models/user';
-import { apiRoutes } from '../../routes/api';
-import { webRoutes } from '../../routes/web';
-import { handleErrorResponse } from '../../utils';
-import http from '../../utils/http';
-import BasePageContainer from '../layout/PageContainer';
-import _banks from './_banks.json'
-import Icon, { DeleteOutlined } from '@ant-design/icons';
-import { formatNumber, shortenEthAddress } from '../../utils/helpers';
-import useCopyToClipboard from '../hooks/useCopyClipboard';
-import LoadingScreen from '../common/LoadingScreen';
-import { Option } from 'antd/es/mentions';
-import { BiInfoCircle, BiRightTopArrowCircle } from 'react-icons/bi';
+} from "antd";
+import { useRef, useState } from "react";
+import { FiUsers } from "react-icons/fi";
+import { Link } from "react-router-dom";
+import { User } from "../../interfaces/models/user";
+import { apiRoutes } from "../../routes/api";
+import { webRoutes } from "../../routes/web";
+import { handleErrorResponse } from "../../utils";
+import http from "../../utils/http";
+import BasePageContainer from "../layout/PageContainer";
+import _banks from "./_banks.json";
+import useCopyToClipboard from "../hooks/useCopyClipboard";
+import LoadingScreen from "../common/LoadingScreen";
+import { Option } from "antd/es/mentions";
+
+export const DELIVERY_STATUS_VALUE = {
+  PENDING: "Đang chờ xử lý",
+  CONFIRM: "Đã xác nhận",
+  PICKED_UP: "Đã lấy hàng",
+  ON_THE_WAY: "Đang giao hàng",
+  DELIVERED: "Đã giao hàng",
+} as const;
+
+export const DELIVERY_STATUS = {
+  PENDING: "PENDING",
+  CONFIRM: "CONFIRM",
+  PICKED_UP: "PICKED_UP",
+  ON_THE_WAY: "ON_THE_WAY",
+  DELIVERED: "DELIVERED",
+} as const;
+
+export const DELIVERY_STATUS_COLORS = {
+  PENDING: "blue", // Màu vàng cho trạng thái đang chờ xử lý
+  CONFIRM: "orange", // Màu xanh đậm cho trạng thái đã xác nhận
+  PICKED_UP: "magenta", // Màu xanh nhạt cho trạng thái đã lấy hàng
+  ON_THE_WAY: "geekblue", // Màu xám nhẹ cho trạng thái đang giao hàng
+  DELIVERED: "success", // Màu xanh lá cho trạng thái đã giao hàng
+} as const;
 
 enum ActionKey {
-  DELETE = 'delete',
-  EDIT = 'edit',
-  LOCK = 'lock',
-  BALANCE = 'balance',
-  VIP = 'vip'
+  DELETE = "delete",
+  EDIT = "edit",
+  LOCK = "lock",
+  BALANCE = "balance",
+  VIP = "vip",
 }
 
 const breadcrumb: BreadcrumbProps = {
@@ -87,21 +104,21 @@ const Orders = () => {
       }
     } catch (error: any) {
       notification.error({
-        message: error?.response?.data?.message || 'Có lỗi xảy ra',
+        message: error?.response?.data?.message || "Có lỗi xảy ra",
         duration: 10,
       });
     }
     setLoading(false);
   };
   const getCurrentBank = (name: string) => {
-    return _banks.banksnapas.find((i) => i.shortName === name)
-  }
+    return _banks.banksnapas.find((i) => i.shortName === name);
+  };
   const columns: ProColumns[] = [
     {
-      title: 'Đơn hàng',
+      title: "Đơn hàng",
 
       sorter: false,
-      align: 'center',
+      align: "center",
       ellipsis: true,
 
       render: (_, row: any) => (
@@ -123,92 +140,68 @@ const Orders = () => {
             <div>---Địa chỉ giao hàng:</div>
             <div>{row?.customer?.address?.[0]}</div>
           </div>
-
         </div>
       ),
     },
-    // {
-    //   title: 'Ví',
-    //   sorter: false,
-    //   align: 'center',
-    //   ellipsis: true,
-    //   search: false,
-    //   render: (_, row: any) => (
-    //     <div className="flex flex-col gap-1">
-    //       <div className="flex items-center justify-between gap-1">
-    //         <div>Tổng coin holder</div>
-    //         <div className="text-black font-bold">{row?.tokens?.length}</div>
-    //       </div>
-
-    //       <div className="flex items-center justify-between gap-1">
-    //         <div>Balance (USDT):</div>
-    //         <div className="text-yellow-700 font-bold">{formatNumber(row?.real_balance?.toFixed(2))}</div>
-    //       </div>
-    //       <div className="flex items-center justify-between gap-1">
-    //         <div>VIP:</div>
-    //         <div className="text-green-700 font-bold">{row?.level_vip || 1}</div>
-    //       </div>
-    //       <div className="flex items-center justify-between gap-1">
-    //         <div>Số người đã giới thiệu:</div>
-    //         <div className="text-green-700 font-bold">{row?.referredUsers?.length || 0}</div>
-    //       </div>
-    //     </div>
-    //   ),
-    // },
 
     {
-      title: 'Trạng thái',
+      title: "Trạng thái",
       sorter: false,
-      align: 'center',
+      align: "center",
       ellipsis: true,
       search: false,
       render: (_, row: any) => (
         <div className="flex flex-col gap-2">
-          <div className='flex gap-3 items-center'>
+          <div className="flex gap-3 items-center">
             <h3>Trạng thái nhận hàng</h3>
-            <Tag color={row?.status === 'DELIVERED' ? 'green-inverse' : "orange-inverse"}>
-              {row?.status === 'DELIVERED' ? "Đã giao hàng" : "Chưa giao hàng"}
+            <Tag
+              color={
+                (!!row?.status &&
+                  (DELIVERY_STATUS_COLORS as any)[row?.status]) ||
+                "default"
+              }
+            >
+              {!!row?.status && (DELIVERY_STATUS_VALUE as any)[row.status]}
             </Tag>
           </div>
-          <div className='flex gap-3 items-center'>
+          <div className="flex gap-3 items-center">
             <h3>Trạng thái thanh toán</h3>
-            <Tag color={row?.isPayMentStore ? 'green-inverse' : "orange-inverse"}>
-              {row?.isPayMentStore ? "Đã thanh toán" : "Chưa thanh toán"}</Tag>
+            <Tag color={row?.isPayment ? "green-inverse" : "orange-inverse"}>
+              {row?.isPayment ? "Đã thanh toán" : "Chưa thanh toán"}
+            </Tag>
           </div>
         </div>
       ),
     },
     {
-      title: 'Số tiền',
+      title: "Số tiền",
       sorter: false,
-      align: 'center',
+      align: "center",
       ellipsis: true,
       search: false,
       render: (_, row: any) => (
         <div>
-          <div className='flex gap-2 items-center'>
-            -- Tổng số tiền :
-            {row?.profit?.toLocaleString()}
+          <div className="flex gap-2 items-center">
+            -- Tổng số tiền :{row?.profit?.toLocaleString()}
           </div>
-          <div className='flex gap-2 items-center'>
-            -- Lợi nhuận :
-            {row?.tongtien?.toLocaleString()}
+          <div className="flex gap-2 items-center">
+            -- Lợi nhuận :{row?.tongtien?.toLocaleString()}
           </div>
         </div>
       ),
     },
     {
-      title: 'Ngày tạo',
+      title: "Ngày tạo",
       sorter: false,
-      align: 'center',
+      align: "center",
       ellipsis: true,
       search: false,
       render: (_, row: any) => (
         <div>
-          <div className='flex gap-2 items-center'>
+          <div className="flex gap-2 items-center">
             -- Ngày tạo : {new Date(row?.createdAt).toLocaleString()}
           </div>
-          <div className='flex gap-2 items-center'>
+          <div className="flex gap-2 items-center">
             -- Cập nhật gần nhất : {new Date(row?.updatedAt).toLocaleString()}
           </div>
         </div>
@@ -364,35 +357,33 @@ const Orders = () => {
             initialValues={selectedUserEdit}
             onFinish={(form) => handleUpdateUser(form, selectedUserEdit)}
           >
-            <Form.Item name={'last_name'} label="Nick Name" className="mb-3">
+            <Form.Item name={"last_name"} label="Nick Name" className="mb-3">
               <Input placeholder="Nhập Nick Name" />
             </Form.Item>
-            <Form.Item name={'password'} label="Mật khẩu" className="mb-3">
+            <Form.Item name={"password"} label="Mật khẩu" className="mb-3">
               <Input placeholder="Nhập mật khẩu" />
             </Form.Item>
-            <Form.Item name={'withdrawPassWord'} label="Mật khẩu rút tiền" className="mb-3">
+            <Form.Item
+              name={"withdrawPassWord"}
+              label="Mật khẩu rút tiền"
+              className="mb-3"
+            >
               <Input placeholder="Nhập mật khẩu rút tiền" />
             </Form.Item>
-            <Form.Item name={'gombayAmount'} label="Số lượng gombay" className="mb-3">
-              <Input placeholder="Nhập số lượng gombay" type='number' />
+            <Form.Item
+              name={"gombayAmount"}
+              label="Số lượng gombay"
+              className="mb-3"
+            >
+              <Input placeholder="Nhập số lượng gombay" type="number" />
             </Form.Item>
-            <Form.Item name='level_vip' label="VIP" className='mb-3'>
+            <Form.Item name="level_vip" label="VIP" className="mb-3">
               <Select>
-                <Option value={"1"}>
-                  VIP 1
-                </Option>
-                <Option value={"2"}>
-                  VIP 2
-                </Option>
-                <Option value={"3"}>
-                  VIP 3
-                </Option>
-                <Option value={"4"}>
-                  VIP 4
-                </Option>
-                <Option value={"5"}>
-                  VIP 5
-                </Option>
+                <Option value={"1"}>VIP 1</Option>
+                <Option value={"2"}>VIP 2</Option>
+                <Option value={"3"}>VIP 3</Option>
+                <Option value={"4"}>VIP 4</Option>
+                <Option value={"5"}>VIP 5</Option>
               </Select>
             </Form.Item>
 
@@ -452,18 +443,21 @@ const Orders = () => {
           <Tabs
             items={[
               {
-                label: 'Cộng tiền',
-                key: '1',
+                label: "Cộng tiền",
+                key: "1",
                 children: (
                   <Form
                     className="max-w-[300px]"
                     onFinish={({ amount }) => {
                       const real_balance =
                         parseFloat(balanceUser.real_balance) + parseInt(amount);
-                      handleUpdateUser({ real_balance, amount_balance: parseInt(amount) }, balanceUser);
+                      handleUpdateUser(
+                        { real_balance, amount_balance: parseInt(amount) },
+                        balanceUser
+                      );
                     }}
                   >
-                    <Form.Item className="mb-3" name={'amount'}>
+                    <Form.Item className="mb-3" name={"amount"}>
                       <InputNumber
                         className="w-full"
                         type="number"
@@ -471,25 +465,33 @@ const Orders = () => {
                       />
                     </Form.Item>
                     <Form.Item>
-                      <Button htmlType='submit'>Cộng</Button>
+                      <Button htmlType="submit">Cộng</Button>
                     </Form.Item>
                   </Form>
                 ),
               },
               {
-                label: 'Trừ tiền',
-                key: '2',
+                label: "Trừ tiền",
+                key: "2",
                 children: (
                   <Form
                     className="max-w-[300px]"
                     onFinish={({ amount }) => {
-                      if (parseFloat(balanceUser.real_balance) < parseInt(amount)) return message.error("Số tiền trong tài khoản không đủ")
+                      if (
+                        parseFloat(balanceUser.real_balance) < parseInt(amount)
+                      )
+                        return message.error(
+                          "Số tiền trong tài khoản không đủ"
+                        );
                       const real_balance =
                         parseFloat(balanceUser.real_balance) - parseInt(amount);
-                      handleUpdateUser({ real_balance, amount_balance: - parseInt(amount) }, balanceUser);
+                      handleUpdateUser(
+                        { real_balance, amount_balance: -parseInt(amount) },
+                        balanceUser
+                      );
                     }}
                   >
-                    <Form.Item className="mb-3" name={'amount'}>
+                    <Form.Item className="mb-3" name={"amount"}>
                       <InputNumber
                         className="w-full"
                         type="number"
@@ -497,7 +499,7 @@ const Orders = () => {
                       />
                     </Form.Item>
                     <Form.Item>
-                      <Button htmlType='submit'>Trừ</Button>
+                      <Button htmlType="submit">Trừ</Button>
                     </Form.Item>
                   </Form>
                 ),
@@ -510,17 +512,17 @@ const Orders = () => {
         columns={columns}
         cardBordered={false}
         cardProps={{
-          subTitle: 'Users',
+          subTitle: "Users",
           tooltip: {
-            className: 'opacity-60',
-            title: 'Mocked data',
+            className: "opacity-60",
+            title: "Mocked data",
           },
           title: <FiUsers className="opacity-60" />,
         }}
         bordered={true}
         showSorterTooltip={false}
         scroll={{ x: true }}
-        tableLayout={'fixed'}
+        tableLayout={"fixed"}
         rowSelection={false}
         pagination={{
           showQuickJumper: true,
@@ -557,7 +559,7 @@ const Orders = () => {
         dateFormatter="string"
         options={{
           search: {
-            placeholder: 'Tìm kiếm theo ID,Username, Email,...',
+            placeholder: "Tìm kiếm theo ID,Username, Email,...",
             width: 100,
             allowClear: true,
           },
