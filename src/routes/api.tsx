@@ -24,7 +24,7 @@ export const apiRoutes = {
   getAdmin: `${API_URL}/profile/me`,
   getAnalyticData: `${API_URL}/analytic`,
   updateBet: `${API_URL}/update-bet`,
-  dashboarData: `${API_URL}/profile/getDataShop`,
+  dashboardData: `${API_URL}/profile/getDataShop`,
   addBank: `${API_URL}/add-bank`,
   deleteBank: `${API_URL}/delete-bank`,
   updateBank: `${API_URL}/update-bank`,
