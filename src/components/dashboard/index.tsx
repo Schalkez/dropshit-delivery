@@ -37,30 +37,29 @@ const Dashboard = () => {
 
   return (
     <BasePageContainer breadcrumb={breadcrumb}>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
         <Card title="Số dư ví" className="shadow-md">
           <div className="flex gap-2 items-center">
             <div className="font-bold">
-              {state?.admin?.admin?.money?.toLocaleString()}
+              ${state?.admin?.admin?.money?.toLocaleString()}
             </div>
           </div>
         </Card>
         <Card title="Tổng số đơn hàng" className="shadow-md">
           <div className="flex gap-2 items-center">
-            <div>Tổng số đơn hàng:</div>
-            <div className="font-bold">{data?.countOrder || "-"}</div>
+            <div className="font-bold">${data?.allOrdersTotalPrice || "-"}</div>
           </div>
         </Card>
-        <Card title="Đang vận chuyển" className="shadow-md">
+        <Card title="Tổng lợi nhuận" className="shadow-md">
           <div className="flex gap-2 items-center">
-            <div>Đang vận chuyển:</div>
-            <div className="font-bold">{data?.countOrderDelivered || "-"}</div>
+            <div className="font-bold">${data?.totalProfit || "-"}</div>
           </div>
         </Card>
-        <Card title="Đơn hàng mới" className="shadow-md">
+        <Card title="Tiền hàng cần thanh toán" className="shadow-md">
           <div className="flex gap-2 items-center">
-            <div>Đơn hàng mới:</div>
-            <div className="font-bold">{data?.countOrderNEW || "-"}</div>
+            <div className="font-bold">
+              ${data?.needResolveOrdersTotalPrice || "-"}
+            </div>
           </div>
         </Card>
       </div>
