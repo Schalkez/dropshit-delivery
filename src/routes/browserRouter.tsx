@@ -89,10 +89,10 @@ export const browserRouter = createBrowserRouter([
         path: webRoutes.deposit,
         element: <Deposit />,
       },
-      {
-        path: webRoutes.withdraw,
-        element: <Withdraw />,
-      },
+      // {
+      //   path: webRoutes.withdraw,
+      //   element: <Withdraw />,
+      // },
       {
         path: webRoutes.history_bet,
         element: <HistoriesBet />,

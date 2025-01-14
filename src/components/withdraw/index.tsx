@@ -4,7 +4,7 @@ import {
   ProColumns,
   RequestData,
   ProDescriptions,
-} from '@ant-design/pro-components';
+} from "@ant-design/pro-components";
 import {
   BreadcrumbProps,
   Button,
@@ -14,23 +14,23 @@ import {
   Tag,
   message,
   notification,
-} from 'antd';
-import { useEffect, useRef, useState } from 'react';
-import { FiUsers } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
-import { User } from '../../interfaces/models/user';
-import { apiRoutes } from '../../routes/api';
-import { webRoutes } from '../../routes/web';
-import { handleErrorResponse } from '../../utils';
-import http from '../../utils/http';
-import BasePageContainer from '../layout/PageContainer';
+} from "antd";
+import { useEffect, useRef, useState } from "react";
+import { FiUsers } from "react-icons/fi";
+import { Link } from "react-router-dom";
+import { User } from "../../interfaces/models/user";
+import { apiRoutes } from "../../routes/api";
+import { webRoutes } from "../../routes/web";
+import { handleErrorResponse } from "../../utils";
+import http from "../../utils/http";
+import BasePageContainer from "../layout/PageContainer";
 
-import Icon, { CheckOutlined } from '@ant-design/icons';
-import { formatNumber } from '../../utils/helpers';
-import LoadingScreen from '../common/LoadingScreen';
-import { RiCloseFill } from 'react-icons/ri';
-import { BiEdit, BiTrash } from 'react-icons/bi';
-import FormItem from 'antd/es/form/FormItem';
+import Icon, { CheckOutlined } from "@ant-design/icons";
+import { formatNumber } from "../../utils/helpers";
+import LoadingScreen from "../common/LoadingScreen";
+import { RiCloseFill } from "react-icons/ri";
+import { BiEdit, BiTrash } from "react-icons/bi";
+import FormItem from "antd/es/form/FormItem";
 
 const breadcrumb: BreadcrumbProps = {
   items: [
@@ -52,16 +52,16 @@ const Withdraw = () => {
 
   function getCurrencyName(region: string) {
     switch (region) {
-      case 'vi':
-        return 'Vnd';
-      case 'thai':
-        return 'Baht';
-      case 'cn':
-        return 'CNY';
-      case 'cam':
-        return 'Riel';
+      case "vi":
+        return "Vnd";
+      case "thai":
+        return "Baht";
+      case "cn":
+        return "CNY";
+      case "cam":
+        return "Riel";
       default:
-        return 'Currency not found';
+        return "Currency not found";
     }
   }
 
@@ -81,50 +81,46 @@ const Withdraw = () => {
   }, []);
 
   const columns: ProColumns[] = [
-
     {
-      title: 'Nạp',
+      title: "Nạp",
       sorter: false,
-      align: 'center',
+      align: "center",
       ellipsis: true,
       render: (_, row: any) => (
         <div className="flex flex-col gap-1">
-          {' '}
+          {" "}
           <div className="flex items-center justify-between gap-1">
             <div>Số tiền nạp:</div>
             <div className="text-yellow-700 font-bold">
               {formatNumber(+row?.moneyWithDraw)}
             </div>
           </div>
-
-
-
         </div>
       ),
     },
     {
-      title: 'Ghi chú',
+      title: "Ghi chú",
       sorter: false,
-      align: 'center',
+      align: "center",
       ellipsis: true,
       render: (_, row: any) => (
         <div className="flex flex-col gap-1 text-center">
-          {row?.content ? row?.content : '-'}
+          {row?.content ? row?.content : "-"}
         </div>
       ),
     },
     {
-      title: 'Trạng thái',
+      title: "Trạng thái",
       sorter: false,
-      align: 'center',
+      align: "center",
       ellipsis: true,
       render: (_, row: any) => (
         <div className="flex flex-col gap-1">
-          {' '}
+          {" "}
           <div className="flex items-center justify-between gap-1">
-            {row?.isResolve === 'RESOLVE' ? (
+            {row?.isResolve === "RESOLVE" ? (
               <Tag color="green-inverse">Hoàn thành</Tag>
-            ) : row?.isResolve === 'PENDING' ? (
+            ) : row?.isResolve === "PENDING" ? (
               <Tag color="orange-inverse">Đang chờ</Tag>
             ) : (
               <Tag color="red-inverse">Huỷ</Tag>
@@ -135,9 +131,9 @@ const Withdraw = () => {
     },
 
     {
-      title: 'Ngày tạo',
+      title: "Ngày tạo",
       sorter: false,
-      align: 'center',
+      align: "center",
       ellipsis: true,
       render: (_, row: any) => (
         <div>{new Date(row?.createdAt).toLocaleString()}</div>
@@ -200,17 +196,17 @@ const Withdraw = () => {
         columns={columns}
         cardBordered={false}
         cardProps={{
-          subTitle: 'Rút tiền',
+          subTitle: "Rút tiền",
           tooltip: {
-            className: 'opacity-60',
-            title: 'Rút tiền',
+            className: "opacity-60",
+            title: "Rút tiền",
           },
           title: <FiUsers className="opacity-60" />,
         }}
         bordered={true}
         showSorterTooltip={false}
         scroll={{ x: true }}
-        tableLayout={'fixed'}
+        tableLayout={"fixed"}
         rowSelection={false}
         pagination={{
           showQuickJumper: true,

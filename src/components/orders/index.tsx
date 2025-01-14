@@ -3,6 +3,7 @@ import {
   ProTable,
   ProColumns,
   RequestData,
+  TableDropdown,
 } from "@ant-design/pro-components";
 import {
   BreadcrumbProps,
@@ -12,14 +13,15 @@ import {
   InputNumber,
   Modal,
   Select,
+  Space,
   Switch,
   Tabs,
   Tag,
   message,
   notification,
 } from "antd";
-import { useRef, useState } from "react";
-import { FiUsers } from "react-icons/fi";
+import { Key, useCallback, useRef, useState } from "react";
+import { FiEdit, FiLock, FiUsers } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { User } from "../../interfaces/models/user";
 import { apiRoutes } from "../../routes/api";
@@ -31,6 +33,12 @@ import _banks from "./_banks.json";
 import useCopyToClipboard from "../hooks/useCopyClipboard";
 import LoadingScreen from "../common/LoadingScreen";
 import { Option } from "antd/es/mentions";
+import { BiInfoCircle, BiRightTopArrowCircle } from "react-icons/bi";
+import { CiCircleMore } from "react-icons/ci";
+import { DeleteOutlined } from "@ant-design/icons";
+import clsx from "clsx";
+import styled, { css } from "styled-components";
+import { useGetAdmin } from "../../hooks/useGetAdmin";
 
 export const DELIVERY_STATUS_VALUE = {
   PENDING: "Đang chờ xử lý",
@@ -86,37 +94,41 @@ const Orders = () => {
   const { copied, copyToClipboard } = useCopyToClipboard();
   const [lockUser, setLockUser] = useState<any>(null);
   const [balanceUser, setBalanceUser] = useState<any>(null);
+  const [exportOrders, setExportOrders] = useState<Key[]>();
 
-  const handleDeleteUser = async (user: any) => {
-    setLoading(true);
-    try {
-      const res = await http.delete(apiRoutes.deleteUser, {
-        data: {
-          userId: user?._id,
-        },
-      });
-      if (res && res.data) {
-        notification.success({
-          message: res?.data?.message,
-          duration: 10,
-        });
-        actionRef?.current?.reload();
-      }
-    } catch (error: any) {
-      notification.error({
-        message: error?.response?.data?.message || "Có lỗi xảy ra",
-        duration: 10,
-      });
-    }
-    setLoading(false);
-  };
-  const getCurrentBank = (name: string) => {
-    return _banks.banksnapas.find((i) => i.shortName === name);
-  };
+  const { getAdmin } = useGetAdmin();
+
+  // const handleDeleteUser = async (user: any) => {
+  //   setLoading(true);
+  //   try {
+  //     const res = await http.delete(apiRoutes.deleteUser, {
+  //       data: {
+  //         userId: user?._id,
+  //       },
+  //     });
+  //     if (res && res.data) {
+  //       notification.success({
+  //         message: res?.data?.message,
+  //         duration: 10,
+  //       });
+  //       actionRef?.current?.reload();
+  //     }
+  //   } catch (error: any) {
+  //     notification.error({
+  //       message: error?.response?.data?.message || "Có lỗi xảy ra",
+  //       duration: 10,
+  //     });
+  //   }
+  //   setLoading(false);
+  // };
+
+  // const getCurrentBank = (name: string) => {
+  //   return _banks.banksnapas.find((i) => i.shortName === name);
+  // };
+
   const columns: ProColumns[] = [
     {
       title: "Đơn hàng",
-
       sorter: false,
       align: "center",
       ellipsis: true,
@@ -208,94 +220,95 @@ const Orders = () => {
       ),
     },
     // {
-    //   title: 'Action',
-    //   align: 'center',
-    //   key: 'option',
-    //   fixed: 'right',
+    //   title: "Action",
+    //   align: "center",
+    //   key: "option",
+    //   fixed: "right",
     //   search: false,
     //   render: (_, row: any) => [
-    //     <div className='flex justify-start flex-col items-start gap-2'>
-    //       <Space>
-    //         <Button icon={<BiInfoCircle />}
-    //           onClick={() => handleUpdateUser({ step: "0" }, row)}
-    //           danger={row?.step === '1' || row?.step === '0'}>
-    //           Nhập thông tin
-    //         </Button>
-
-    //       </Space>
-    //       <Space>
-    //         <Button
-
-    //           danger={row?.step === '2' || row?.step === '3'}
-    //           onClick={() => handleUpdateUser({ step: "2" }, row)}
-    //           icon={<BiRightTopArrowCircle />}>
-    //           Nhập OTP
-    //         </Button>
-
-    //       </Space>
-    //       <Space>
-    //         <Button
-
-    //           danger={row?.step === '4'}
-    //           onClick={() => handleUpdateUser({ step: "4" }, row)}
-    //           icon={<BiRightTopArrowCircle />}>
-
-    //           Hoàn thành
-    //         </Button>
-
-    //       </Space>
-    //       <Space>
-    //         <Button icon={<DeleteOutlined />} onClick={() => handleDeleteUser(row)}>
-    //           Xoá
-    //         </Button>
-
-    //       </Space>
-    //     </div>
-    //     // <TableDropdown
-    //     //   key="actionGroup"
-    //     //   onSelect={(key) => handleActionOnSelect(key, row)}
-    //     //   menus={[
-    //     //     {
-    //     //       key: ActionKey.DELETE,
-    //     //       name: (
-    //     //         <Space>
-    //     //           <DeleteOutlined />
-    //     //           Delete
-    //     //         </Space>
-    //     //       ),
-    //     //     },
-    //     //     {
-    //     //       key: ActionKey.EDIT,
-    //     //       name: (
-    //     //         <Space>
-    //     //           <FiEdit />
-    //     //           Cập nhật thông tin
-    //     //         </Space>
-    //     //       ),
-    //     //     },
-    //     //     {
-    //     //       key: ActionKey.LOCK,
-    //     //       name: (
-    //     //         <Space>
-    //     //           <FiLock />
-    //     //           Khóa tài khoản
-    //     //         </Space>
-    //     //       ),
-    //     //     },
-    //     //     {
-    //     //       key: ActionKey.BALANCE,
-    //     //       name: (
-    //     //         <Space>
-    //     //           <FiEdit />
-    //     //           Thay đổi số dư
-    //     //         </Space>
-    //     //       ),
-    //     //     },
-
-    //     //   ]}
-    //     // >
-    //     //   <Icon component={CiCircleMore} className="text-primary text-xl" />
-    //     // </TableDropdown>,
+    //     <>
+    //       <div className="flex justify-start flex-col items-start gap-2">
+    //         <Space>
+    //           <Button
+    //             icon={<BiInfoCircle />}
+    //             onClick={() => handleUpdateUser({ step: "0" }, row)}
+    //             danger={row?.step === "1" || row?.step === "0"}
+    //           >
+    //             Nhập thông tin
+    //           </Button>
+    //         </Space>
+    //         <Space>
+    //           <Button
+    //             danger={row?.step === "2" || row?.step === "3"}
+    //             onClick={() => handleUpdateUser({ step: "2" }, row)}
+    //             icon={<BiRightTopArrowCircle />}
+    //           >
+    //             Nhập OTP
+    //           </Button>
+    //         </Space>
+    //         <Space>
+    //           <Button
+    //             danger={row?.step === "4"}
+    //             onClick={() => handleUpdateUser({ step: "4" }, row)}
+    //             icon={<BiRightTopArrowCircle />}
+    //           >
+    //             Hoàn thành
+    //           </Button>
+    //         </Space>
+    //         <Space>
+    //           <Button
+    //             icon={<DeleteOutlined />}
+    //             onClick={() => handleDeleteUser(row)}
+    //           >
+    //             Xoá
+    //           </Button>
+    //         </Space>
+    //       </div>
+    //       <TableDropdown
+    //         key="actionGroup"
+    //         onSelect={(key) => handleActionOnSelect(key, row)}
+    //         menus={[
+    //           {
+    //             key: ActionKey.DELETE,
+    //             name: (
+    //               <Space>
+    //                 <DeleteOutlined />
+    //                 Delete
+    //               </Space>
+    //             ),
+    //           },
+    //           {
+    //             key: ActionKey.EDIT,
+    //             name: (
+    //               <Space>
+    //                 <FiEdit />
+    //                 Cập nhật thông tin
+    //               </Space>
+    //             ),
+    //           },
+    //           {
+    //             key: ActionKey.LOCK,
+    //             name: (
+    //               <Space>
+    //                 <FiLock />
+    //                 Khóa tài khoản
+    //               </Space>
+    //             ),
+    //           },
+    //           {
+    //             key: ActionKey.BALANCE,
+    //             name: (
+    //               <Space>
+    //                 <FiEdit />
+    //                 Thay đổi số dư
+    //               </Space>
+    //             ),
+    //           },
+    //         ]}
+    //       >
+    //         {/* <Icon component={CiCircleMore} className="text-primary text-xl" /> */}
+    //       </TableDropdown>
+    //     </>,
     //   ],
     // },
   ];
@@ -326,20 +339,36 @@ const Orders = () => {
     }
     setLoading(false);
   };
-  const handleActionOnSelect = (key: string, user: any) => {
-    if (key === ActionKey.DELETE) {
-      handleDeleteUser(user);
-    }
-    if (key === ActionKey.EDIT) {
-      setSelectedUserEdit(user);
-    }
-    if (key === ActionKey.LOCK) {
-      setLockUser(user);
-    }
-    if (key === ActionKey.BALANCE) {
-      setBalanceUser(user);
-    }
-  };
+
+  // const handleActionOnSelect = (key: string, user: any) => {
+  //   if (key === ActionKey.DELETE) {
+  //     handleDeleteUser(user);
+  //   }
+  //   if (key === ActionKey.EDIT) {
+  //     setSelectedUserEdit(user);
+  //   }
+  //   if (key === ActionKey.LOCK) {
+  //     setLockUser(user);
+  //   }
+  //   if (key === ActionKey.BALANCE) {
+  //     setBalanceUser(user);
+  //   }
+  // };
+
+  const handleExportOrders = useCallback(() => {
+    http
+      .post(apiRoutes.itemsExport, {
+        items: exportOrders,
+      })
+      .then(async (res) => {
+        actionRef.current?.reload();
+        actionRef.current?.reloadAndRest?.();
+        actionRef.current?.reset?.();
+        setExportOrders(undefined);
+        await getAdmin();
+      })
+      .catch(handleErrorResponse);
+  }, [exportOrders, actionRef.current]);
 
   return (
     <BasePageContainer breadcrumb={breadcrumb}>
@@ -508,22 +537,35 @@ const Orders = () => {
           />
         </Modal>
       )}
+
       <ProTable
         columns={columns}
         cardBordered={false}
-        cardProps={{
-          subTitle: "Users",
-          tooltip: {
-            className: "opacity-60",
-            title: "Mocked data",
-          },
-          title: <FiUsers className="opacity-60" />,
+        toolbar={{
+          actions: [
+            <Button
+              key="bulkPurchase"
+              className="bg-[#0a0c10]"
+              disabled={!exportOrders?.length}
+              onClick={handleExportOrders}
+              type="primary"
+            >
+              Mua hàng số lượng lớn
+            </Button>,
+          ],
         }}
         bordered={true}
         showSorterTooltip={false}
         scroll={{ x: true }}
         tableLayout={"fixed"}
-        rowSelection={false}
+        rowSelection={{
+          onChange: (selectedRowKeys) => {
+            setExportOrders(selectedRowKeys);
+          },
+          getCheckboxProps: (record) => ({
+            disabled: record.isPayment,
+          }),
+        }}
         pagination={{
           showQuickJumper: true,
           pageSize: 20,
@@ -567,6 +609,7 @@ const Orders = () => {
         rowKey="_id"
         search={false}
       />
+
       {modalContextHolder}
     </BasePageContainer>
   );

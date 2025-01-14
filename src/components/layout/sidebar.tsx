@@ -1,12 +1,19 @@
-import { webRoutes } from '../../routes/web';
-import { BiHomeAlt2 } from 'react-icons/bi';
-import Icon, { UserOutlined, SettingOutlined, CheckCircleOutlined, PayCircleFilled, HistoryOutlined, BarChartOutlined } from '@ant-design/icons';
+import { webRoutes } from "../../routes/web";
+import { BiHomeAlt2 } from "react-icons/bi";
+import Icon, {
+  UserOutlined,
+  SettingOutlined,
+  CheckCircleOutlined,
+  PayCircleFilled,
+  HistoryOutlined,
+  BarChartOutlined,
+} from "@ant-design/icons";
 
 export const sidebar = [
   {
     path: webRoutes.dashboard,
     key: webRoutes.dashboard,
-    name: 'Dashboard',
+    name: "Dashboard",
     icon: <Icon component={BiHomeAlt2} />,
   },
   // {
@@ -18,7 +25,7 @@ export const sidebar = [
   {
     path: webRoutes.orders,
     key: webRoutes.orders,
-    name: 'Quản lý đơn hàng',
+    name: "Quản lý đơn hàng",
     icon: <UserOutlined />,
   },
   // {
@@ -36,15 +43,15 @@ export const sidebar = [
   {
     path: webRoutes.deposit,
     key: webRoutes.deposit,
-    name: 'Nạp tiền',
+    name: "Nạp tiền ví giao hàng",
     icon: <PayCircleFilled />,
   },
-  {
-    path: webRoutes.withdraw,
-    key: webRoutes.withdraw,
-    name: 'Rút  tiền',
-    icon: <PayCircleFilled />,
-  },
+  // {
+  //   path: webRoutes.withdraw,
+  //   key: webRoutes.withdraw,
+  //   name: 'Rút  tiền',
+  //   icon: <PayCircleFilled />,
+  // },
   // {
   //   path: webRoutes.history_bet,
   //   key: webRoutes.history_bet,

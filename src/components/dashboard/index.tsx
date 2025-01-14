@@ -33,7 +33,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     getDataDashboard();
-  }, []);
+  }, [getDataDashboard]);
 
   return (
     <BasePageContainer breadcrumb={breadcrumb}>
@@ -41,7 +41,7 @@ const Dashboard = () => {
         <Card title="Số dư ví" className="shadow-md">
           <div className="flex gap-2 items-center">
             <div className="font-bold">
-              ${state?.admin?.admin?.money?.toLocaleString()}
+              ${state?.admin?.admin?.deliveryWallet?.toLocaleString()}
             </div>
           </div>
         </Card>
