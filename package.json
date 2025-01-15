@@ -10,7 +10,8 @@
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx --fix .",
     "prettier": "prettier --check \"./**/*.{js,jsx,ts,tsx,css,md,json}\"",
-    "prettier:fix": "prettier --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\""
+    "prettier:fix": "prettier --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\"",
+    "build:prod": "npm run build && mv dist /var/www/html/dropship-delivery || mkdir -p /var/www/html/dropship-delivery && mv dist /var/www/html/dropship-delivery"
   },
   "dependencies": {
     "clsx": "^2.1.1",
