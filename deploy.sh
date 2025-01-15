@@ -1,5 +1,5 @@
-if [ -d /var/www/html/dropshit-delivery/dist ]; then
-  rm -rf /var/www/html/dropshit-delivery/dist
+if [ -d /var/www/html/dropshit-delivery ]; then
+  rm -rf /var/www/html/dropshit-delivery
 fi
 
 npm run build
