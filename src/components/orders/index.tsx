@@ -194,10 +194,10 @@ const Orders = () => {
       render: (_, row: any) => (
         <div>
           <div className="flex gap-2 items-center">
-            -- Tổng số tiền :{row?.profit?.toLocaleString()}
+            -- Tổng số tiền: {row?.tongtien?.toLocaleString()}
           </div>
           <div className="flex gap-2 items-center">
-            -- Lợi nhuận :{row?.tongtien?.toLocaleString()}
+            -- Lợi nhuận: {row?.profit?.toLocaleString()}
           </div>
         </div>
       ),
